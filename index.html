@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Academy — Aprende Quality Assurance</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080e14;
+    --bg2: #0d1520;
+    --bg3: #111d2b;
+    --green: #00e5a0;
+    --green2: #00b87a;
+    --blue: #3d8bff;
+    --blue2: #1a6fe8;
+    --text: #e8f0fe;
+    --muted: #7a90aa;
+    --border: rgba(255,255,255,0.07);
+    --card: #0d1a27;
+    --card-hover: #112234;
+    --beginner: #00e5a0;
+    --intermediate: #f5a623;
+    --advanced: #ff5e7d;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAVBAR ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(8,14,20,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .nav-logo span { color: var(--green); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--green);
+    color: var(--bg) !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 700 !important;
+    font-size: 0.85rem !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--green2) !important; color: var(--bg) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 8rem 4rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,229,160,0.08) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(61,139,255,0.07) 0%, transparent 70%);
+    top: 20%;
+    right: 10%;
+    pointer-events: none;
+  }
+
+  /* Grid lines background */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    text-align: center;
+    max-width: 800px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,229,160,0.1);
+    border: 1px solid rgba(0,229,160,0.25);
+    color: var(--green);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+
+  .hero h1 .accent { color: var(--green); }
+  .hero h1 .accent2 { color: var(--blue); }
+
+  .hero p {
+    font-size: 1.1rem;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 580px;
+    margin: 0 auto 2.5rem;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: var(--bg);
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .btn-primary:hover {
+    background: var(--green2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,229,160,0.3);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .btn-secondary:hover {
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.04);
+    transform: translateY(-2px);
+  }
+
+  /* Stats row */
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--green);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTIONS COMMON ── */
+  section {
+    padding: 6rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--green);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--green);
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 500px;
+    line-height: 1.6;
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .about-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about-avatar-wrap {
+    position: relative;
+  }
+
+  .about-avatar {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bg3), var(--card));
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    position: relative;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  .about-avatar::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--blue));
+    z-index: -1;
+    opacity: 0.6;
+  }
+
+  .about-ring {
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    border: 1px dashed rgba(0,229,160,0.2);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin 20s linear infinite;
+  }
+
+  @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+  .about-ring::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .about-content .section-label { margin-top: 0; }
+
+  .about-bio {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 1rem;
+    margin: 1.5rem 0 2rem;
+    font-weight: 300;
+  }
+
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 2rem;
+  }
+
+  .skill-tag {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .skill-tag:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(0,229,160,0.05);
+  }
+
+  .btn-portfolio {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.7rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: not-allowed;
+    position: relative;
+  }
+
+  .badge-soon {
+    background: rgba(245,166,35,0.15);
+    color: #f5a623;
+    border: 1px solid rgba(245,166,35,0.3);
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ── COURSES ── */
+  .courses { max-width: 1200px; margin: 0 auto; }
+
+  .courses-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .filter-tabs {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .filter-tab {
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-tab.active, .filter-tab:hover {
+    background: rgba(0,229,160,0.1);
+    border-color: rgba(0,229,160,0.3);
+    color: var(--green);
+  }
+
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .course-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.8rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.6s forwards;
+  }
+
+  .course-card:nth-child(1) { animation-delay: 0.05s; }
+  .course-card:nth-child(2) { animation-delay: 0.1s; }
+  .course-card:nth-child(3) { animation-delay: 0.15s; }
+  .course-card:nth-child(4) { animation-delay: 0.2s; }
+  .course-card:nth-child(5) { animation-delay: 0.25s; }
+  .course-card:nth-child(6) { animation-delay: 0.3s; }
+  .course-card:nth-child(7) { animation-delay: 0.35s; }
+  .course-card:nth-child(8) { animation-delay: 0.4s; }
+  .course-card:nth-child(9) { animation-delay: 0.45s; }
+  .course-card:nth-child(10) { animation-delay: 0.5s; }
+  .course-card:nth-child(11) { animation-delay: 0.55s; }
+  .course-card:nth-child(12) { animation-delay: 0.6s; }
+
+  .course-card:hover {
+    background: var(--card-hover);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+
+  .course-card.available:hover {
+    border-color: rgba(0,229,160,0.25);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,229,160,0.1);
+  }
+
+  .course-card.soon {
+    opacity: 0.65;
+  }
+  .course-card.soon:hover {
+    opacity: 0.85;
+    border-color: rgba(255,255,255,0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  }
+
+  /* Shimmer for available cards */
+  .course-card.available::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,229,160,0.04), transparent);
+    transition: left 0.5s;
+  }
+  .course-card.available:hover::before { left: 150%; }
+
+  .course-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .course-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.9rem;
+    flex-wrap: wrap;
+  }
+
+  .badge {
+    font-size: 0.65rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .badge-beginner {
+    background: rgba(0,229,160,0.12);
+    color: var(--beginner);
+    border: 1px solid rgba(0,229,160,0.25);
+  }
+  .badge-intermediate {
+    background: rgba(245,166,35,0.12);
+    color: var(--intermediate);
+    border: 1px solid rgba(245,166,35,0.25);
+  }
+  .badge-advanced {
+    background: rgba(255,94,125,0.12);
+    color: var(--advanced);
+    border: 1px solid rgba(255,94,125,0.25);
+  }
+  .badge-available {
+    background: rgba(0,229,160,0.08);
+    color: var(--green);
+    border: 1px solid rgba(0,229,160,0.2);
+  }
+  .badge-coming {
+    background: rgba(122,144,170,0.1);
+    color: var(--muted);
+    border: 1px solid rgba(122,144,170,0.2);
+  }
+
+  .course-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
+  }
+
+  .course-desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+  }
+
+  .course-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+  }
+
+  .btn-course {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-course-active {
+    background: rgba(0,229,160,0.12);
+    color: var(--green);
+    border: 1px solid rgba(0,229,160,0.25);
+  }
+  .btn-course-active:hover {
+    background: rgba(0,229,160,0.2);
+    transform: translateX(2px);
+  }
+
+  .btn-course-disabled {
+    background: rgba(255,255,255,0.03);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    cursor: not-allowed;
+  }
+
+  .course-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(122,144,170,0.4);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 3rem 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-left .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+  }
+  .footer-left .footer-logo span { color: var(--green); }
+
+  .footer-left p {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .footer-link {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+  .footer-link:hover {
+    border-color: var(--green);
+    color: var(--green);
+    background: rgba(0,229,160,0.08);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 2rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 2rem; }
+    .hero { padding: 7rem 2rem 3rem; }
+    .hero h1 { font-size: 2.5rem; }
+    .about-inner { grid-template-columns: 1fr; gap: 3rem; text-align: center; }
+    .section-label { justify-content: center; }
+    .skills-grid { justify-content: center; }
+    .courses-grid { grid-template-columns: repeat(2, 1fr); }
+    .courses-header { flex-direction: column; align-items: flex-start; }
+    footer { flex-direction: column; text-align: center; align-items: center; }
+    .hero-stats { gap: 1.5rem; }
+  }
+
+  @media (max-width: 600px) {
+    .courses-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-direction: column; gap: 1.5rem; }
+    .filter-tabs { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-logo">
+    <span>QA</span> Academy
+  </div>
+  <ul class="nav-links">
+    <li><a href="#sobre-mi">Sobre mí</a></li>
+    <li><a href="#cursos">Cursos</a></li>
+    <li><a href="#cursos" class="nav-cta">Ver Cursos →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Plataforma de Aprendizaje QA</div>
+    <h1>Domina el Universo del<br><span class="accent">Quality</span> <span class="accent2">Assurance</span></h1>
+    <p>Desde fundamentos de QA Funcional hasta Automatización avanzada. Teoría, práctica, métricas y preparación para entrevistas, todo en un solo lugar.</p>
+    <div class="hero-buttons">
+      <a href="#cursos" class="btn-primary">Explorar Cursos →</a>
+      <a href="#sobre-mi" class="btn-secondary">Sobre el autor</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-number">12</span>
+        <span class="stat-label">Cursos</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">2</span>
+        <span class="stat-label">Disponibles</span>
+      </div>
+      <div class="stat">
+        <span class="stat-number">∞</span>
+        <span class="stat-label">Aprendizaje</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="sobre-mi">
+  <div class="about-inner">
+    <div class="about-avatar-wrap">
+      <div class="about-avatar">👨‍💻</div>
+      <div class="about-ring"></div>
+    </div>
+    <div class="about-content">
+      <div class="section-label">Sobre mí</div>
+      <h2 class="section-title">QA Engineer &<br>Creador de Contenido</h2>
+      <p class="about-bio">QA Academy: tu plataforma de aprendizaje integral en Aseguramiento de Calidad de Software. Desde fundamentos de QA Funcional hasta Automatización avanzada, con teoría, práctica, métricas y preparación para entrevistas.</p>
+      <div class="skills-grid">
+        <span class="skill-tag">Selenium</span>
+        <span class="skill-tag">Cypress</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">Postman</span>
+        <span class="skill-tag">JMeter</span>
+        <span class="skill-tag">ISTQB</span>
+        <span class="skill-tag">Appium</span>
+        <span class="skill-tag">CI/CD</span>
+        <span class="skill-tag">BDD</span>
+        <span class="skill-tag">SQL</span>
+      </div>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+        <div class="btn-portfolio">
+          🗂️ Ver Portafolio
+          <span class="badge-soon">Próximamente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section id="cursos" style="padding: 6rem 4rem;">
+  <div class="courses" style="max-width:1200px; margin:0 auto;">
+    <div class="courses-header">
+      <div>
+        <div class="section-label">Cursos</div>
+        <h2 class="section-title">Ruta de Aprendizaje QA</h2>
+        <p class="section-sub">Cursos diseñados para llevarte desde los fundamentos hasta el nivel senior.</p>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active">Todos</button>
+        <button class="filter-tab">Disponibles</button>
+        <button class="filter-tab">Próximamente</button>
+      </div>
+    </div>
+    <div class="courses-grid">
+
+      <!-- Card 1 -->
+      <div class="course-card available">
+        <span class="course-icon">🤖</span>
+        <div class="course-badges">
+          <span class="badge badge-intermediate">Intermedio</span>
+          <span class="badge badge-available">● Disponible</span>
+        </div>
+        <div class="course-title">QA Automatización</div>
+        <div class="course-desc">Aprende automatización de pruebas con Selenium, patrones de diseño y frameworks modernos para proyectos reales.</div>
+        <div class="course-footer">
+          <span class="course-number">#01</span>
+          <a href="https://dakux1111.github.io/qa-functional-automation/" target="_blank" class="btn-course btn-course-active">Ir al curso →</a>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="course-card available">
+        <span class="course-icon">🧠</span>
+        <div class="course-badges">
+          <span class="badge badge-advanced">Avanzado</span>
+          <span class="badge badge-available">● Disponible</span>
+        </div>
+        <div class="course-title">QA Senior</div>
+        <div class="course-desc">Lleva tus habilidades al siguiente nivel con estrategias, liderazgo técnico y arquitectura de pruebas profesional.</div>
+        <div class="course-footer">
+          <span class="course-number">#02</span>
+          <a href="https://dakux1111.github.io/advancedqa/" target="_blank" class="btn-course btn-course-active">Ir al curso →</a>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="course-card soon">
+        <span class="course-icon">📘</span>
+        <div class="course-badges">
+          <span class="badge badge-beginner">Principiante</span>
+          <span class="badge badge-coming">Próximamente</span>
+        </div>
+        <div class="course-title">ISTQB Foundation Level</div>
+        <div class="course-desc">Fundamentos internacionales de testing. Preparación completa para la certificación ISTQB CTFL.</div>
+        <div class="course-footer">
+          <span class="course-number">#03</span>
+          <span class="btn-course btn-course-disabled">🔒 Próximamente</span>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="course-card soon">
+        <span class="course-icon">📗</span>
+        <div class="course-badges">
+          <span class="badge badge-advanced">Avanzado</span>
+          <span class="badge badge-coming">Próximamente</span>
+        </div>
+        <div class="course-title">ISTQB Advanced — Test Analyst</div>
+        <div class="course-desc">Profundiza en análisis de pruebas y prepárate para la certificación CTAL-TA con ejercicios prácticos.</div>
+        <div class="course-footer">
+          <span class="course-number">#04</span>
+          <span class="btn-course btn-course-disabled">🔒 Próximamente</span>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="course-card soon">
+        <span class="course-icon">🔍</span>
+        <div class="course-badges">
+          <span class="badge badge-intermediate">Intermedio</span>
+          <span class="badge badge-coming">Próximamente</span>
+        </div>
+        <div class="course-title">API Testing con Postman & RestAssured</div>
+        <div class="course-desc">Pruebas de APIs REST desde cero hasta automatización completa con colecciones y pipelines CI/CD.</div>
+        <div class="course-footer">
+          <span class="course-number">#05</span>
+          <span class="btn-course btn-course-disabled">🔒 Próximamente</span>
+        </div>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="course-card soon">
+        <span class="course-icon">⚡</span>
+        <div class="course-badges">
+          <span class="badge badge-intermediate">Intermedio</span>
+          <span class="badge badge-coming">Próximamente</span>
+        </div>
+        <div class="course-title">Performance Testing con JMeter</div>
+        <div class="course-desc">Diseña y ejecuta pruebas de carga, estrés y rendimiento en aplicaciones web con análisis de resultados.</div>
+        <div class="course-footer">
+          <span class="course-number">#06</span>
+          <span class="btn-course btn-course-disabled">🔒 Próximamente</span>
+        </div>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="course-card soon">
+        <span class="course-icon">🛡️</span>
+        <div class="course-badges">
+          <span class="badge badge-beginner">Principiante</span>
+          <span class="badge badge-coming">Próximamente</span>
+        </div>
+        <div class="course-title">QA en Entornos Agile / Scrum</div>
+        <div class="course-desc">Testing dentro de metodologías ágiles, ceremonias, historias de usuario y criterios de aceptación.</div>
+        <div class="course-footer">
+          <span class="course-number">#07</span>
+          <span class="btn-course btn-course-disabled">🔒 Próximamente</span>
+        </div>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="course-card soon">
+        <span class="course-icon">📱</span>
+        <div class="course-badges">
+          <span class="badge badge-intermediate">Intermedio</span>
+          <span class="badge badge-coming">Próximamente</span>
+        </div>
+        <div class="course-title">Mobile Testing con Appium</div>
+        <div class="course-desc">Automatiza pruebas en aplicaciones iOS y Android con Appium y estrategias mobile-first para equipos ágiles.</div>
+        <div class="course-footer">
+          <span class="course-number">#08</span>
+          <span class="btn-course btn-course-disabled">🔒 Próximamente</span>
+        </div>
+      </div>
+
+      <!-- Card 9 -->
+      <div class="course-card soon">
+        <span class="course-icon">🗄️</span>
+        <div class="course-badges">
+          <span class="badge badge-beginner">Principiante</span>
+          <span class="badge badge-coming">Próximamente</span>
+        </div>
+        <div class="course-title">SQL para QA Testers</div>
+        <div class="course-desc">Domina las consultas SQL esenciales para validar datos, explorar bases de datos y diseñar pruebas de backend.</div>
+        <div class="course-footer">
+          <span class="course-number">#09</span>
+          <span class="btn-course btn-course-disabled">🔒 Próximamente</span>
+        </div>
+      </div>
+
+      <!-- Card 10 -->
+      <div class="course-card soon">
+        <span class="course-icon">🔄</span>
+        <div class="course-badges">
+          <span class="badge badge-intermediate">Intermedio</span>
+          <span class="badge badge-coming">Próximamente</span>
+        </div>
+        <div class="course-title">Testing en CI/CD con GitHub Actions</div>
+        <div class="course-desc">Integra tus pruebas en pipelines CI/CD, automatiza ejecuciones y genera reportes en cada deploy.</div>
+        <div class="course-footer">
+          <span class="course-number">#10</span>
+          <span class="btn-course btn-course-disabled">🔒 Próximamente</span>
+        </div>
+      </div>
+
+      <!-- Card 11 -->
+      <div class="course-card soon">
+        <span class="course-icon">🥒</span>
+        <div class="course-badges">
+          <span class="badge badge-intermediate">Intermedio</span>
+          <span class="badge badge-coming">Próximamente</span>
+        </div>
+        <div class="course-title">BDD con Cucumber</div>
+        <div class="course-desc">Escribe pruebas en lenguaje Gherkin y conecta negocio y tecnología con Behavior Driven Development.</div>
+        <div class="course-footer">
+          <span class="course-number">#11</span>
+          <span class="btn-course btn-course-disabled">🔒 Próximamente</span>
+        </div>
+      </div>
+
+      <!-- Card 12 -->
+      <div class="course-card soon">
+        <span class="course-icon">♿</span>
+        <div class="course-badges">
+          <span class="badge badge-beginner">Principiante</span>
+          <span class="badge badge-coming">Próximamente</span>
+        </div>
+        <div class="course-title">Accesibilidad y Pruebas de Usabilidad</div>
+        <div class="course-desc">Valida estándares WCAG, herramientas de accesibilidad y pruebas centradas en la experiencia del usuario.</div>
+        <div class="course-footer">
+          <span class="course-number">#12</span>
+          <span class="btn-course btn-course-disabled">🔒 Próximamente</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-logo"><span>QA</span> Academy</div>
+    <p>© 2025 QA Academy — Todos los derechos reservados</p>
+  </div>
+  <div class="footer-links">
+    <a href="#" class="footer-link" title="LinkedIn">in</a>
+    <a href="#" class="footer-link" title="GitHub">
+      <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+  // Filter tabs
+  const tabs = document.querySelectorAll('.filter-tab');
+  const cards = document.querySelectorAll('.course-card');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const filter = tab.textContent.trim();
+      cards.forEach(card => {
+        if (filter === 'Todos') {
+          card.style.display = 'flex';
+          card.style.flexDirection = 'column';
+        } else if (filter === 'Disponibles') {
+          card.style.display = card.classList.contains('available') ? 'flex' : 'none';
+          if (card.style.display === 'flex') card.style.flexDirection = 'column';
+        } else {
+          card.style.display = card.classList.contains('soon') ? 'flex' : 'none';
+          if (card.style.display === 'flex') card.style.flexDirection = 'column';
+        }
+      });
+    });
+  });
+
+  // Make cards flex columns initially
+  cards.forEach(c => { c.style.flexDirection = 'column'; });
+
+  // Intersection observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animationPlayState = 'running';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.course-card, .about-inner').forEach(el => {
+    el.style.animationPlayState = 'paused';
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
